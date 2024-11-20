@@ -1,12 +1,12 @@
 package com.project.shopapp.models;
 
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
-@FieldDefaults(makeFinal = true)
 public class OrderStatus {
-    public static String PENDING = "pending";
-    public static String PROCESSING = "processing";
-    public static String SHIPPED = "shipped";
-    public static String DELIVERED = "delivered";
-    public static String CANCELLED = "cancelled";
+    public static final String PENDING = "pending";
+    public static final String PROCESSING = "processing";
+    public static final String SHIPPED = "shipped";
+    public static final String DELIVERED = "delivered";
+    public static final String CANCELLED = "cancelled";
 }

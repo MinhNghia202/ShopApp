@@ -5,7 +5,11 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Data
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "order_details")
 public class OrderDetail {
@@ -25,7 +29,7 @@ public class OrderDetail {
     @Column(name = "price")
     float price;
 
-    @Column(name = "number_of_product", nullable = false)
+    @Column(name = "number_of_products", nullable = false)
     int numberOfProduct;
 
     @Column(name = "total_money" ,nullable = false)

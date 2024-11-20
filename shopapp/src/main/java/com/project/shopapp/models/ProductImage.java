@@ -5,10 +5,16 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Data
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "product_images")
 public class ProductImage {
+    public static final int MAXIMUM_IMAGES_PER_PRODUCT = 5;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -18,6 +24,6 @@ public class ProductImage {
     @JoinColumn(name = "product_id")
     Product product;
 
-    @Column(name = "url_image", length = 300)
+    @Column(name = "image_url", length = 300)
     String imageUrl;
 }

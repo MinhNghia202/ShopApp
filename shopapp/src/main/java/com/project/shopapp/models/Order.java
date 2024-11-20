@@ -5,13 +5,18 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.lang.reflect.AnnotatedArrayType;
+import java.sql.Date;
 import java.time.LocalDate;
 
 @Entity
-@Data
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "orders")
-public class Order {
+public class Order{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -37,7 +42,7 @@ public class Order {
     String note;
 
     @Column(name = "order_date")
-    LocalDate orderDate;
+    java.util.Date orderDate;
 
     @Column(name = "status")
     String status;
@@ -52,7 +57,7 @@ public class Order {
     String shippingAddress;
 
     @Column(name = "shipping_date")
-    Data shippingDate;
+    Date shippingDate;
 
     @Column(name = "tracking_number")
     String trackingNumber;

@@ -5,15 +5,18 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Data
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "roles")
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     long id;
 
-    @Column(name = "fullname" , length = 100)
-    String fullName;
+    @Column(name = "name" , length = 100)
+    String name;
 }
