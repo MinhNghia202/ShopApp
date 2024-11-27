@@ -22,8 +22,13 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -38,20 +43,23 @@ public class SecurityConfig {
             "/users/register",
             "/auth/log-in",
             "/auth/introspect",
-            "/auth/log-out"};
+            "/auth/log-out"
+            };
 
     private final RoleRepository roleRepository;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(request ->
-                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .anyRequest().authenticated());
-
-        httpSecurity.oauth2ResourceServer(oath2->
-                oath2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
-                        .jwtAuthenticationConverter(jwtAuthenticationConverter())));
-
+        httpSecurity.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(request ->
+                        request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                                .requestMatchers(HttpMethod.GET, "users/roles").permitAll()
+                                .requestMatchers(HttpMethod.GET, "products/images/*").permitAll()
+                                .anyRequest().authenticated());
+        httpSecurity.oauth2ResourceServer(oauth2 ->
+                oauth2.jwt(jwtConfigurer ->
+                        jwtConfigurer.decoder(jwtDecoder())
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter())));
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         return httpSecurity.build();
     }
@@ -72,6 +80,19 @@ public class SecurityConfig {
                 .withSecretKey(secretKeySpec)
                 .macAlgorithm(MacAlgorithm.HS512)
                 .build();
+    }
+
+    @Bean
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200")); // Chỉ định origin cụ thể
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedHeaders(List.of("authorization", "content-type", "x-auth-token"));
+        corsConfiguration.setExposedHeaders(List.of("x-auth-token"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
     }
 
     @Bean

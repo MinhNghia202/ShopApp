@@ -50,6 +50,9 @@ public class AuthenticationService {
                 .orElseThrow(()-> new AppException(ErrorCode.USER_NOT_FOUND_EXCEPTION));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean authenticated =  passwordEncoder.matches(request.getPassword(), user.getPassword());
+        if(request.getRoleId() != user.getRole().getId()){
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
         if(!authenticated){
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }

@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,6 +23,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,7 +34,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/v1/products")
+@RequestMapping("/products")
 public class ProductController {
     private static final Logger log = LoggerFactory.getLogger(ProductController.class);
     @Autowired
@@ -85,6 +87,22 @@ public class ProductController {
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/images/{imageName}")
+    public  ResponseEntity<?> viewImage(@PathVariable("imageName") String imageName){
+        try {
+            Path imagePath = Paths.get("uploads/" + imageName);
+            UrlResource resource = new UrlResource(imagePath.toUri());
+            if(resource.exists()){
+                return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
+            }///D:/ShopApp/shopapp/upload/4cf537b6-e871-476f-beb2-08b72fa7332d_Screenshot%202024-09-17%20000111
+            else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (MalformedURLException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 

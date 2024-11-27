@@ -1,5 +1,4 @@
-package com.project.shopapp.dto.request;
-
+package com.project.shopapp.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,8 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationRequest {
-    String username;
-    String password;
-    int roleId;
+public class RoleResponse {
+    long id;
+    String name;
 }
